@@ -38,20 +38,21 @@ pipeline {
         always {
             script {
                 docker.image('nginx').withRun("-p ${env.NGINX_PORT}:${env.NGINX_PORT}") { container ->
-                    sh """
-                        echo 'server {
+                    sh '''
+                        echo "server {
                             listen       9000;
                             server_name  localhost;
 
                             location / {
                                 proxy_pass http://localhost:${env.JENKINS_PORT};
                             }
-                        }' > nginx.conf
+                        }" > nginx.conf
 
                         mv nginx.conf /etc/nginx/conf.d/default.conf
 
-                        nginx -g 'daemon off;'
-                    """
+                        # Menggunakan perintah 'service nginx start' untuk memulai NGINX
+                        service nginx start
+                    '''
                 }
             }
         }
