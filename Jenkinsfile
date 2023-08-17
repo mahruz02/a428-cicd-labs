@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
         GITHUB_TOKEN     = credentials('jenkins-github-token')
-        GITHUB_REPOSITORY = 'berviantoleo/a428-cicd-labs'
+        GITHUB_REPOSITORY = 'mahruz02/a428-cicd-labs'
     }
     stages {
         stage('Build') { 
