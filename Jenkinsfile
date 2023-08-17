@@ -5,11 +5,6 @@ pipeline {
             args '-p 3000:3000' 
         }
     }
-
-    environment {
-        GITHUB_TOKEN     = credentials('jenkins-github-token')
-        GITHUB_REPOSITORY = 'mahruz02/a428-cicd-labs'
-    }
      environment {
         PUBLIC_URL       = 'https://mahruz02.github.io/a428-cicd-labs'
         GITHUB_TOKEN     = credentials('jenkins-github-token')
