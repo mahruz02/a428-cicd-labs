@@ -1,10 +1,11 @@
 pipeline {
     agent {
         docker {
-            image 'mahruz02/node-alpine-git:16' 
-            args '-p 3000:3000' 
+            image 'node:16-buster-slim'
+            args '-p 3000:3000'
         }
     }
+
     environment {
         GITHUB_TOKEN     = credentials('jenkins-github-token')
         GITHUB_REPOSITORY = 'mahruz02/a428-cicd-labs'
