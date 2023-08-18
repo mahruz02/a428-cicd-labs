@@ -1,38 +1,46 @@
 pipeline {
-    agent {
-        docker {
-            image 'timbru31/node-alpine-git:16' 
-            args '-p 3000:3000' 
-        }
-    }
-     environment {
-        PUBLIC_URL       = 'https://mahruz02.github.io/a428-cicd-labs'
-        GITHUB_TOKEN     = credentials('jenkins-github-token')
-        GITHUB_REPOSITORY = 'mahruz02/a428-cicd-labs'
-    }
+    agent any
+
     stages {
-        stage('Build') { 
+        stage('Checkout SCM') {
             steps {
-                sh 'npm install' 
+                checkout scm
             }
         }
+
+        stage('Build') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
         stage('Test') {
             steps {
                 sh './jenkins/scripts/test.sh'
             }
         }
+
+        stage('Manual Approval') {
+            steps {
+                input message: 'Lanjutkan ke tahap Deploy?'
+            }
+        }
+
         stage('Deploy') {
             steps {
                 sh './jenkins/scripts/deliver.sh'
-                input message: 'Sudah selesai menggunakan React App? (Klik "Proceed" untuk mengakhiri)'
-                sh './jenkins/scripts/kill.sh'
                 sh 'chmod +x ./jenkins/scripts/github-pages.sh && ./jenkins/scripts/github-pages.sh'
+                sleep time: 60, unit: 'SECONDS'
+                sh './jenkins/scripts/kill.sh'
             }
         }
     }
+
     post {
         always {
-            archiveArtifacts artifacts: 'build/**/*', fingerprint: true
+            node {
+                archiveArtifacts artifacts: 'build/**/*', fingerprint: true
+            }
         }
     }
 }
